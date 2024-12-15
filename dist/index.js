@@ -59495,8 +59495,8 @@ if (!config.accessKeyId ||
     throw new Error('请配置accessKeyId, accessKeySecret, region, bucket');
 }
 const dir = (0, core_1.getInput)('dir');
-const targetOssDir = (0, core_1.getInput)('targetOssDir');
-if (!dir || !targetOssDir) {
+const targetDir = (0, core_1.getInput)('targetDir');
+if (!dir || !targetDir) {
     throw new Error('请配置上传目录和目标目录');
 }
 const client = new ali_oss_1.default(Object.assign({}, config
@@ -59520,7 +59520,7 @@ const uploadFiles = (dir, targetDir) => __awaiter(void 0, void 0, void 0, functi
         console.log(e);
     }
 });
-uploadFiles(dir, targetOssDir);
+uploadFiles(dir, targetDir);
 
 
 /***/ }),
