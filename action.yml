@@ -31,12 +31,4 @@ outputs:
     description: '上传成功后的URL'
 runs:
   using: "node20"
-  steps:
-    - run: node index.js
-      env:
-        accessKeyId: ${{ inputs.key-id }}
-        accessKeySecret: ${{ inputs.key-secret }}
-        region: ${{ inputs.region }}
-        bucket: ${{ inputs.bucket }}
-        dir: ${{ inputs.dir }}
-        targetDir: ${{ inputs.target-dir }}
+  main: "lib/index.js"
