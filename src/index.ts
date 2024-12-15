@@ -25,7 +25,7 @@ const client = new OSS({
 })
 
 
-const uploadFiles = async (dir, targetDir) => {
+const uploadFiles = async (dir: string, targetDir: string): Promise<void> => {
   try {
     const files = fs.readdirSync(dir);
     for (const file of files) {
@@ -42,5 +42,5 @@ const uploadFiles = async (dir, targetDir) => {
   }
 };
 
-await uploadFiles(dir, targetOssDir)
+uploadFiles(dir, targetOssDir)
 
