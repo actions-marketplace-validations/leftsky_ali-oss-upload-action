@@ -1,0 +1,14 @@
+name: My Custom Action
+description: A description of your custom action
+inputs:
+  example-input:
+    description: Example input for the action
+    required: true
+    default: "default value"
+outputs:
+  example-output:
+    description: Example output of the action
+runs:
+  using: "bash"
+  steps:
+    - run: ./script.sh ${{ inputs.example-input }}
