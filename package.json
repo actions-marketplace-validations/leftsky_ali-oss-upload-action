@@ -1,0 +1,21 @@
+{
+  "name": "ali-oss-upload-action",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "leftsky <leftsky@vip.qq.com>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0",
+    "ali-oss": "^6.20.0",
+    "axios": "^1.7.2",
+    "dayjs": "^1.11.12",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.2.0",
+    "md5": "^2.3.0",
+    "path": "^0.12.7",
+    "ssh2": "^1.15.0"
+  }
+}
