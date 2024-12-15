@@ -5,20 +5,16 @@ branding:
   icon: 'upload-cloud'
   color: 'orange'
 inputs:
-  region:
-    description: '阿里云OSS地域'
-    required: true
-    default: ''
-  endpoint:
-    description: '阿里云OSS Endpoint'
-    required: true
-    default: ''
-  key-id:
+  accessKeyId:
     description: '阿里云OSS AccessKeyId'
     required: true
     default: ''
-  key-secret:
+  accessKeySecret:
     description: '阿里云OSS AccessKeySecret'
+    required: true
+    default: ''
+  region:
+    description: '阿里云OSS地域'
     required: true
     default: ''
   bucket:
@@ -29,7 +25,7 @@ inputs:
     description: '需要上传的文件或文件夹'
     required: true
     default: ''
-  target-dir:
+  targetDir:
     description: '上传到OSS的目标文件夹'
     required: true
     default: ''

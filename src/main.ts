@@ -19,8 +19,8 @@ if (
 }
 
 const dir = getInput('dir')
-const targetOssDir = getInput('targetOssDir')
-if (!dir || !targetOssDir) {
+const targetDir = getInput('targetDir')
+if (!dir || !targetDir) {
   throw new Error('请配置上传目录和目标目录')
 }
 
@@ -46,4 +46,4 @@ const uploadFiles = async (dir: string, targetDir: string): Promise<void> => {
   }
 }
 
-uploadFiles(dir, targetOssDir)
+uploadFiles(dir, targetDir)
