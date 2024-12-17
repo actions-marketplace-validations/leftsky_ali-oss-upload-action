@@ -20,4 +20,13 @@ if (
 
 const client = new OSS(config)
 
+// 判断密钥是否正确，链接是否成功
+client.listBuckets().then((res) => {
+  core.info('OSS client connected successfully')
+  core.info(`Bucket: ${res.buckets.map((bucket) => bucket.name).join(', ')}`)
+}).catch((err) => {
+  core.error('OSS client connection failed')
+  throw err
+})
+
 export default client

@@ -59466,10 +59466,44 @@ function wrappy (fn, cb) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(7484));
 const ali_oss_1 = __importDefault(__nccwpck_require__(4391));
 const core_1 = __nccwpck_require__(7484);
 const config = {
@@ -59485,6 +59519,14 @@ if (!config.accessKeyId ||
     throw new Error('请配置accessKeyId, accessKeySecret, region, bucket');
 }
 const client = new ali_oss_1.default(config);
+// 判断密钥是否正确，链接是否成功
+client.listBuckets().then((res) => {
+    core.info('OSS client connected successfully');
+    core.info(`Bucket: ${res.buckets.map((bucket) => bucket.name).join(', ')}`);
+}).catch((err) => {
+    core.error('OSS client connection failed');
+    throw err;
+});
 exports["default"] = client;
 
 
@@ -59568,22 +59610,22 @@ function deployToOss(localPath, targetPath) {
 /**
  * 上传文件到 OSS
  * @param {string} uploadPath 表示上传到 OSS 的 Object 名称
- * @param {string} logoFilePath 本地文件夹或者文件路径
+ * @param {string} localFilePath 本地文件夹或者文件路径
  * @param {number} tryTime 重试次数
  */
-function putOSS(uploadPath_1, logoFilePath_1) {
-    return __awaiter(this, arguments, void 0, function* (uploadPath, logoFilePath, tryTime = 1) {
+function putOSS(uploadPath_1, localFilePath_1) {
+    return __awaiter(this, arguments, void 0, function* (uploadPath, localFilePath, tryTime = 1) {
         try {
-            const result = yield ossClient_1.default.put(uploadPath, logoFilePath);
+            const result = yield ossClient_1.default.put(uploadPath, localFilePath);
             core.info(`${new Date().toLocaleString()}>>>${uploadPath} uploaded successfully`);
             return result;
         }
         catch (err) {
             if (tryTime >= 3) {
-                throw new Error(`${logoFilePath} upload failed after ${tryTime} attempts`);
+                throw new Error(`${localFilePath} upload failed after ${tryTime} attempts`);
             }
-            core.warning(`${logoFilePath} upload attempt ${tryTime} failed, retrying...`);
-            return putOSS(uploadPath, logoFilePath, tryTime + 1);
+            core.warning(`${localFilePath} upload attempt ${tryTime} failed, retrying...`);
+            return putOSS(uploadPath, localFilePath, tryTime + 1);
         }
     });
 }
