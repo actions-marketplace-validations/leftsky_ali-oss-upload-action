@@ -23,19 +23,19 @@ export async function deployToOss(localPath: string, targetPath: string): Promis
 /**
  * 上传文件到 OSS
  * @param {string} uploadPath 表示上传到 OSS 的 Object 名称
- * @param {string} logoFilePath 本地文件夹或者文件路径
+ * @param {string} localFilePath 本地文件夹或者文件路径
  * @param {number} tryTime 重试次数
  */
-async function putOSS(uploadPath: string, logoFilePath: string, tryTime: number = 1): Promise<string> {
+async function putOSS(uploadPath: string, localFilePath: string, tryTime: number = 1): Promise<string> {
   try {
-    const result = await client.put(uploadPath, logoFilePath)
+    const result = await client.put(uploadPath, localFilePath)
     core.info(`${new Date().toLocaleString()}>>>${uploadPath} uploaded successfully`)
     return result
   } catch (err) {
     if (tryTime >= 3) {
-      throw new Error(`${logoFilePath} upload failed after ${tryTime} attempts`)
+      throw new Error(`${localFilePath} upload failed after ${tryTime} attempts`)
     }
-    core.warning(`${logoFilePath} upload attempt ${tryTime} failed, retrying...`)
-    return putOSS(uploadPath, logoFilePath, tryTime + 1)
+    core.warning(`${localFilePath} upload attempt ${tryTime} failed, retrying...`)
+    return putOSS(uploadPath, localFilePath, tryTime + 1)
   }
 }
