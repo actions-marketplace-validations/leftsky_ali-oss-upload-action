@@ -59548,37 +59548,42 @@ const core = __importStar(__nccwpck_require__(7484));
 function deployToOss(localPath, targetPath) {
     return __awaiter(this, void 0, void 0, function* () {
         const docs = fs_1.default.readdirSync(localPath);
-        const fileMap = docs.map(function (doc) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const _src = `${localPath}/${doc}`, _dist = `${targetPath}/${doc}`;
-                const st = fs_1.default.statSync(_src);
-                if (st.isFile())
-                    return putOSS(_dist, _src);
-                return deployToOss(_src, _dist);
-            });
-        });
-        return Promise.all(fileMap);
+        for (const doc of docs) {
+            const _src = `${localPath}/${doc}`;
+            const _dist = `${targetPath}/${doc}`;
+            const st = fs_1.default.statSync(_src);
+            if (st.isFile()) {
+                yield putOSS(_dist, _src);
+            }
+            else if (st.isDirectory()) {
+                yield deployToOss(_src, _dist);
+            }
+            else {
+                core.warning(`文件类型错误: ${_src}`);
+            }
+        }
+        return [];
     });
 }
 /**
  * 上传文件到 OSS
  * @param {string} uploadPath 表示上传到 OSS 的 Object 名称
  * @param {string} logoFilePath 本地文件夹或者文件路径
+ * @param {number} tryTime 重试次数
  */
-function putOSS(uploadPath, logoFilePath) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let tryTime = 0;
+function putOSS(uploadPath_1, logoFilePath_1) {
+    return __awaiter(this, arguments, void 0, function* (uploadPath, logoFilePath, tryTime = 1) {
         try {
-            tryTime++;
             const result = yield ossClient_1.default.put(uploadPath, logoFilePath);
             core.info(`${new Date().toLocaleString()}>>>${uploadPath} uploaded successfully`);
             return result;
         }
         catch (err) {
-            if (tryTime === 3) {
-                throw new Error(`${logoFilePath} upload failed`);
+            if (tryTime >= 3) {
+                throw new Error(`${logoFilePath} upload failed after ${tryTime} attempts`);
             }
-            return putOSS(uploadPath, logoFilePath);
+            core.warning(`${logoFilePath} upload attempt ${tryTime} failed, retrying...`);
+            return putOSS(uploadPath, logoFilePath, tryTime + 1);
         }
     });
 }
